@@ -1,4 +1,3 @@
-// TODO: Paste the Firebase initialization code first
 // Initialize Firebase
 var config = {
 	apiKey: "AIzaSyCbYViXzophYyXOpvpf0nLYYtamQAlzzTg",
@@ -7,7 +6,6 @@ var config = {
 	storageBucket: "",
 };
 firebase.initializeApp(config);
-// TODO: Your code below
 
 // write to database
 /*
@@ -50,7 +48,7 @@ firebase.database().ref('tasks/xyz890').update({
 // once gets data once
 // this return a promise so can be chained with .then()
 firebase.database().ref('tasks/').once('value').then(function(snapshot) {
-  console.log(i, snapshot.val());
+  //console.log(i, snapshot.val());
 }).then(()=>{
 	// this will execute when the promise has finished
 })
@@ -59,7 +57,7 @@ firebase.database().ref('tasks/').once('value').then(function(snapshot) {
 // on gets data every time there is achange on the database
 // not a promise, can't be chained
 firebase.database().ref('tasks/').on('value', function(snapshot) {
-  console.log(i, snapshot.val());
+  //console.log(i, snapshot.val());
   i++
 })
 */
@@ -89,10 +87,8 @@ delegate('input', 'keypress', 'input', ()=>{
 const renderUpdate = (source)=>{
 	if ( !!source ){
 		let notecontent = source;
-		var noteKeys = Object.keys(notecontent);
-		console.log(noteKeys)
-		var displayContent = noteKeys.map((v,i,a)=>{
-			console.log(notecontent[v].note)
+		let noteKeys = Object.keys(notecontent);
+		let displayContent = noteKeys.map((v,i,a)=>{
 			return `<li data-key='${v}'>${notecontent[v].note}</li>`
 		}).join('');
 		document.querySelector('ul').innerHTML = displayContent;
@@ -103,23 +99,19 @@ const renderUpdate = (source)=>{
 
 // onload
 firebase.database().ref('tasks/savedTasks/').once('value').then(function(snapshot) {
-	console.log('once', snapshot.val())
 	renderUpdate( snapshot.val() )
 })
 
 // on every note change
 firebase.database().ref('tasks/savedTasks/').on('value', function(snapshot) {
-	console.log('on', snapshot.val())
 	renderUpdate( snapshot.val() )
 })
 
 delegate('ul', 'click', 'li', ()=>{ // remove on list click
-	console.log(event.target.getAttribute('data-key'));
 	let removeMe = 'tasks/savedTasks/' + event.target.getAttribute('data-key');
 	if ( event.target.parentNode.children.length > 1 ){
 		firebase.database().ref(removeMe).remove()
 	} else {
-		console.log('last note!!!');
 		firebase.database().ref(removeMe).remove()
 	}
 });
